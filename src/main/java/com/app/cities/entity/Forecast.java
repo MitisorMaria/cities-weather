@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
+/**
+ * The weather forecast for a given city, for a single day.
+ *
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 public class Forecast {

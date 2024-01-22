@@ -11,6 +11,10 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
 
+/**
+ * Class responsible for routing HTTP requests. It maps each request to its handler function.
+ *
+ */
 @Configuration
 public class RouterConfig {
 

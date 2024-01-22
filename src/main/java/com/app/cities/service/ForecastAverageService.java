@@ -23,43 +23,65 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+/**
+ * Service that calculates the forecast averages for a list of cities.
+ */
 @Component
 public class ForecastAverageService {
 
-    @Autowired
-    private PropertiesReader propertiesReader;
+    @Autowired private PropertiesReader propertiesReader;
 
     public static final String FORECAST_URL = "/forecast";
 
+    /**
+     * Calculates the forecast averages for the valid cities in the list.
+     *
+     * @param cityList a list of cities containing both valid and invalid values
+     * @return a {@code Flux} of forecast averages for the given cities
+     */
     public Flux<ForecastAverage> getForecastAverages(List<String> cityList) {
         Map<String, String> parameters = new HashMap<>();
         List<String> enumCitiesNames =
                 Arrays.stream(Cities.values()).map(enumCity -> enumCity.name()).collect(Collectors.toList());
         List<String> validCities = cityList.stream()
-                .filter(city -> enumCitiesNames.contains(city.toUpperCase(Locale.ROOT).replace('-', '_')))
-                .sorted().collect(Collectors.toList());
+                .filter(city -> enumCitiesNames.contains(city.toUpperCase(Locale.ROOT).replace('-', '_'))).sorted()
+                .collect(Collectors.toList());
 
         Set<String> noDuplicates = new HashSet<>(validCities);
         validCities.clear();
         validCities.addAll(noDuplicates);
 
         return Flux.fromIterable(validCities.stream().sorted().map(city -> {
-            List<Forecast> forecastList = doRequestForCity(parameters, city).getForecastList();
+            List<Forecast> forecastList = doRequestForCity(city).getForecastList();
             return getAverageForForecastList(city, forecastList);
         }).collect(Collectors.toList()));
     }
 
-    private ForecastAverage getAverageForForecastList(String name, List<Forecast> forecastList) {
+    /**
+     * Calculates the forecast average from a list of forecasts, for a single city.
+     *
+     * @param cityName the name of the city whose forecasts are being used
+     * @param forecastList the list of forecasts
+     * @return a {@code ForecastAverage} object containing the name of the city and the average values for temperature
+     * and wind speed.
+     */
+    private ForecastAverage getAverageForForecastList(String cityName, List<Forecast> forecastList) {
         Integer temperatureSum = 0;
         Integer windSum = 0;
         for (Forecast forecast : forecastList) {
             temperatureSum += forecast.getTemperature();
             windSum += forecast.getWind();
         }
-        return new ForecastAverage(name, temperatureSum / forecastList.size(), windSum / forecastList.size());
+        return new ForecastAverage(cityName, temperatureSum / forecastList.size(), windSum / forecastList.size());
     }
 
-    private Response doRequestForCity(Map<String, String> parameters, String city) {
+    /**
+     * Makes a GET request to the cities API and retrieves the list of forecasts for a single city.
+     *
+     * @param city the name of the city whose forecasts are to be retrieved.
+     * @return a {@code Response} object containing the list of forecasts for the given city.
+     */
+    private Response doRequestForCity(String city) {
         String uriString = propertiesReader.getApiUrl() + FORECAST_URL;
         final UriComponentsBuilder builder = UriComponentsBuilder.fromUri(URI.create(uriString));
         builder.path("/" + city);

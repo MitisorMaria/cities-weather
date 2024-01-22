@@ -16,6 +16,10 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 
 
+/**
+ * Class that holds all handler functions related to forecast averages.
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class ForecastAverageHandler {

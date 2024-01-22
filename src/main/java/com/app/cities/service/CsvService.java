@@ -10,11 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Service that writes to a .csv file the {@code ForecastAverage} objects it receives.
+ *
+ */
 @Component
 public class CsvService {
 
     public static final String HEADER = "Name, temperature, wind";
 
+    /**
+     * Writes the objects from the {@code Flux} to a .csv file.
+     *
+     * @param averageFlux flux containing {@code ForecastAverage} objects, received from the forecast average service.
+     * @param path the path used for storing the .csv file.
+     */
     public void writeToCsv(Flux<ForecastAverage> averageFlux, String path) {
         PrintWriter writer = null;
         List<ForecastAverage> averageList = new ArrayList<>();
