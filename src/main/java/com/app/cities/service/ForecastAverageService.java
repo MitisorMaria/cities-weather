@@ -40,12 +40,11 @@ public class ForecastAverageService {
      * @return a {@code Flux} of forecast averages for the given cities
      */
     public Flux<ForecastAverage> getForecastAverages(List<String> cityList) {
-        Map<String, String> parameters = new HashMap<>();
         List<String> enumCitiesNames =
                 Arrays.stream(Cities.values()).map(enumCity -> enumCity.name()).collect(Collectors.toList());
         List<String> validCities = cityList.stream()
-                .filter(city -> enumCitiesNames.contains(city.toUpperCase(Locale.ROOT).replace('-', '_'))).sorted()
-                .collect(Collectors.toList());
+                .filter(city -> enumCitiesNames.contains(city.toUpperCase(Locale.ROOT).replace('-', '_')))
+                .sorted().collect(Collectors.toList());
 
         Set<String> noDuplicates = new HashSet<>(validCities);
         validCities.clear();
@@ -54,7 +53,7 @@ public class ForecastAverageService {
         return Flux.fromIterable(validCities.stream().sorted().map(city -> {
             List<Forecast> forecastList = doRequestForCity(city).getForecastList();
             return getAverageForForecastList(city, forecastList);
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toList())).onErrorComplete();
     }
 
     /**

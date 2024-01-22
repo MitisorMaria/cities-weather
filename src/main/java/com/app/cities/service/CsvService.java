@@ -26,7 +26,7 @@ public class CsvService {
      * @param path the path used for storing the .csv file.
      */
     public void writeToCsv(Flux<ForecastAverage> averageFlux, String path) {
-        PrintWriter writer = null;
+        PrintWriter writer;
         List<ForecastAverage> averageList = new ArrayList<>();
         try {
             writer = new PrintWriter(path);

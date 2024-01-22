@@ -18,7 +18,6 @@ import java.util.Arrays;
 
 /**
  * Class that holds all handler functions related to forecast averages.
- *
  */
 @Component
 @RequiredArgsConstructor
@@ -26,17 +25,19 @@ public class ForecastAverageHandler {
 
     @Autowired private ForecastAverageService forecastAverageService;
 
-    @Autowired
-    private CsvService csvService;
+    @Autowired private CsvService csvService;
 
-    @Autowired
-    private PropertiesReader propertiesReader;
+    @Autowired private PropertiesReader propertiesReader;
 
     public Mono<ServerResponse> getForecastAverages(ServerRequest request) {
-        Flux<ForecastAverage> forecastAverageList = forecastAverageService.getForecastAverages(
-                Arrays.stream(request.queryParam("city").get().split(",")).toList());
+        Flux<ForecastAverage> forecastAverageList;
+        try {
+            forecastAverageList = forecastAverageService.getForecastAverages(
+                    Arrays.stream(request.queryParam("city").get().split(",")).toList());
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
         csvService.writeToCsv(forecastAverageList, propertiesReader.getCsvPath());
-        return ServerResponse.ok()
-                .body(BodyInserters.fromPublisher(forecastAverageList, ForecastAverage.class));
+        return ServerResponse.ok().body(BodyInserters.fromPublisher(forecastAverageList, ForecastAverage.class));
     }
 }
