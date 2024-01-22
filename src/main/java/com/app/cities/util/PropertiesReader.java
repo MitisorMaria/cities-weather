@@ -1,4 +1,4 @@
-package com.test.cities.util;
+package com.app.cities.util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

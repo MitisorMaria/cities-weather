@@ -1,4 +1,4 @@
-package com.test.cities.entity;
+package com.app.cities.entity;
 
 import lombok.Getter;
 

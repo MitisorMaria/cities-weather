@@ -1,7 +1,7 @@
-package com.test.cities.service;
+package com.app.cities.service;
 
-import com.test.cities.entity.ForecastAverage;
-import org.springframework.stereotype.Service;
+import com.app.cities.entity.ForecastAverage;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.io.FileNotFoundException;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
+@Component
 public class CsvService {
 
     public static final String HEADER = "Name, temperature, wind";
@@ -21,7 +21,7 @@ public class CsvService {
         try {
             writer = new PrintWriter(path);
             writer.println(HEADER);
-            // reverted to an iterable in order to be able to use the writer
+            // converted to an iterable in order to be able to use the writer
             averageFlux.toIterable().forEach(forecastAverage -> averageList.add(forecastAverage));
             for (ForecastAverage forecastAverage : averageList) {
                 writer.println(forecastAverage.toString());

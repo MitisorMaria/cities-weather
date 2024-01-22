@@ -1,13 +1,13 @@
-package com.test.cities.service;
+package com.app.cities.service;
 
-import com.test.cities.util.PropertiesReader;
-import com.test.cities.entity.Cities;
-import com.test.cities.entity.Forecast;
-import com.test.cities.entity.ForecastAverage;
-import com.test.cities.entity.Response;
+import com.app.cities.entity.Cities;
+import com.app.cities.entity.ForecastAverage;
+import com.app.cities.util.PropertiesReader;
+import com.app.cities.entity.Forecast;
+import com.app.cities.entity.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Service
+@Component
 public class ForecastAverageService {
 
     @Autowired
