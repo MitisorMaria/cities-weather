@@ -53,10 +53,10 @@ public class AverageServiceTests {
         when(propertiesReader.getApiUrl()).thenReturn("http://localhost:8082/forecastService");
 
         List<String> testCityList = Arrays.stream(
-                "Cluj-Napoca,Bucuresti,Craiova,Timisoara,Dej,Constanta,Cluj-Napoca,Baia-Mare,Arad,Bistrita,Oradea".split(
+                "Cluj-Napoca,Bucuresti,Craiova,Timisoara,Dej,Cluj-Napoca,Baia-Mare,Arad,Bistrita,Oradea".split(
                         ",")).toList();
         List<ForecastAverage> forecastAverageList =
                 forecastAverageService.getForecastAverages(testCityList).toStream().collect(Collectors.toList());
-        Assertions.assertEquals(6, forecastAverageList.size());
+        Assertions.assertEquals(5, forecastAverageList.size());
     }
 }

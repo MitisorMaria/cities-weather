@@ -7,12 +7,15 @@ import com.app.cities.entity.Forecast;
 import com.app.cities.entity.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +36,7 @@ public class ForecastAverageService {
     public static final String DASH = "-";
     public static final String SLASH = "/";
     public static final String UNDERSCORE = "_";
+    public static final String NO_DATA = "No data";
 
     /**
      * Calculates the forecast averages for the valid cities in the list.
@@ -51,10 +55,13 @@ public class ForecastAverageService {
         validCities.clear();
         validCities.addAll(noDuplicates);
 
+        ForecastAverage fallbackForecastAverageValue = new ForecastAverage(NO_DATA, 0, 0);
+
         return Flux.fromIterable(validCities.stream().sorted().map(city -> {
-            List<Forecast> forecastList = doRequestForCity(city).getForecastList();
-            return getAverageForForecastList(city, forecastList);
-        }).collect(Collectors.toList())).onErrorComplete();
+            List<Forecast> forecastList = doRequestForCity(city).getForecast();
+            return !forecastList.isEmpty() ? getAverageForForecastList(city, forecastList) : fallbackForecastAverageValue;
+        }).collect(Collectors.toList())).onErrorContinue(Throwable.class,
+                (ex, o) -> Flux.just(fallbackForecastAverageValue));
     }
 
     /**
@@ -86,7 +93,12 @@ public class ForecastAverageService {
         final UriComponentsBuilder builder = UriComponentsBuilder.fromUri(URI.create(uriString));
         builder.path(SLASH + city);
         final URI uri = builder.build().toUri();
-
-        return new RestTemplate().exchange(uri, HttpMethod.GET, null, Response.class).getBody();
+        ResponseEntity<Response> apiResponse;
+        try {
+            apiResponse = new RestTemplate().exchange(uri, HttpMethod.GET, null, Response.class);
+        } catch (HttpClientErrorException exception) {
+            return new Response(0, 0, "", new ArrayList<>());
+        }
+        return apiResponse.getBody();
     }
 }
