@@ -19,7 +19,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class RouterConfig {
 
     @Bean
-    RouterFunction<ServerResponse> routes(ForecastAverageHandler handler) {
+    public RouterFunction<ServerResponse> routes(ForecastAverageHandler handler) {
         return route(GET("/api/weather").and(
                 accept(MediaType.APPLICATION_JSON)), handler::getForecastAverages);
     }
