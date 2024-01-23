@@ -29,11 +29,14 @@ public class ForecastAverageHandler {
 
     @Autowired private PropertiesReader propertiesReader;
 
+    public static final String CITY = "city";
+    public static final String COMMA = ",";
+
     public Mono<ServerResponse> getForecastAverages(ServerRequest request) {
         Flux<ForecastAverage> forecastAverageList;
         try {
             forecastAverageList = forecastAverageService.getForecastAverages(
-                    Arrays.stream(request.queryParam("city").get().split(",")).toList());
+                    Arrays.stream(request.queryParam(CITY).get().split(COMMA)).toList());
         } catch (Exception e) {
             return Mono.error(e);
         }

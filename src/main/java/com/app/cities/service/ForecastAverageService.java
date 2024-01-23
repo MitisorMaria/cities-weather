@@ -14,11 +14,9 @@ import reactor.core.publisher.Flux;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +30,9 @@ public class ForecastAverageService {
     @Autowired private PropertiesReader propertiesReader;
 
     public static final String FORECAST_URL = "/forecast";
+    public static final String DASH = "-";
+    public static final String SLASH = "/";
+    public static final String UNDERSCORE = "_";
 
     /**
      * Calculates the forecast averages for the valid cities in the list.
@@ -43,7 +44,7 @@ public class ForecastAverageService {
         List<String> enumCitiesNames =
                 Arrays.stream(Cities.values()).map(enumCity -> enumCity.name()).collect(Collectors.toList());
         List<String> validCities = cityList.stream()
-                .filter(city -> enumCitiesNames.contains(city.toUpperCase(Locale.ROOT).replace('-', '_')))
+                .filter(city -> enumCitiesNames.contains(city.toUpperCase(Locale.ROOT).replace(DASH, UNDERSCORE)))
                 .sorted().collect(Collectors.toList());
 
         Set<String> noDuplicates = new HashSet<>(validCities);
@@ -83,7 +84,7 @@ public class ForecastAverageService {
     private Response doRequestForCity(String city) {
         String uriString = propertiesReader.getApiUrl() + FORECAST_URL;
         final UriComponentsBuilder builder = UriComponentsBuilder.fromUri(URI.create(uriString));
-        builder.path("/" + city);
+        builder.path(SLASH + city);
         final URI uri = builder.build().toUri();
 
         return new RestTemplate().exchange(uri, HttpMethod.GET, null, Response.class).getBody();
