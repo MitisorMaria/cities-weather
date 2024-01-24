@@ -36,7 +36,7 @@ public class ForecastAverageService {
     public static final String DASH = "-";
     public static final String SLASH = "/";
     public static final String UNDERSCORE = "_";
-    public static final String NO_DATA = "No data";
+    public static final String NO_DATA = "No data for city: ";
 
     /**
      * Calculates the forecast averages for the valid cities in the list.
@@ -58,10 +58,11 @@ public class ForecastAverageService {
         ForecastAverage fallbackForecastAverageValue = new ForecastAverage(NO_DATA, 0, 0);
 
         return Flux.fromIterable(validCities.stream().sorted().map(city -> {
-            List<Forecast> forecastList = doRequestForCity(city).getForecast();
-            return !forecastList.isEmpty() ? getAverageForForecastList(city, forecastList) : fallbackForecastAverageValue;
-        }).collect(Collectors.toList())).onErrorContinue(Throwable.class,
-                (ex, o) -> Flux.just(fallbackForecastAverageValue));
+                    List<Forecast> forecastList = doRequestForCity(city).getForecast();
+                    return !forecastList.isEmpty() ? getAverageForForecastList(city, forecastList)
+                            : new ForecastAverage(NO_DATA + city, 0, 0);
+                }).collect(Collectors.toList()))
+                .onErrorContinue(Throwable.class, (ex, o) -> Flux.just(fallbackForecastAverageValue));
     }
 
     /**
