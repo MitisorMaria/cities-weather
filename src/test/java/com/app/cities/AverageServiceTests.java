@@ -22,10 +22,12 @@ public class AverageServiceTests {
     @Mock private PropertiesReader propertiesReader;
     @InjectMocks private ForecastAverageService forecastAverageService;
 
+    public static final String API_URL = "https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io";
+
     @Test
     void areAveragesCalculatedCorrectly() {
         when(propertiesReader.getCsvPath()).thenReturn("");
-        when(propertiesReader.getApiUrl()).thenReturn("https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io");
+        when(propertiesReader.getApiUrl()).thenReturn(API_URL);
 
         List<String> testCityList = Arrays.stream("Arad,Dej".split(",")).toList();
         List<ForecastAverage> forecastAverageList =
@@ -39,7 +41,7 @@ public class AverageServiceTests {
     @Test
     void emptyResultWhenNoValidCities() {
         when(propertiesReader.getCsvPath()).thenReturn("");
-        when(propertiesReader.getApiUrl()).thenReturn("https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io");
+        when(propertiesReader.getApiUrl()).thenReturn(API_URL);
 
         List<String> testCityList = Arrays.stream("Dej,Brasov".split(",")).toList();
         List<ForecastAverage> forecastAverageList =
@@ -50,7 +52,7 @@ public class AverageServiceTests {
     @Test
     void areValidCitiesDetectedCorrectly() {
         when(propertiesReader.getCsvPath()).thenReturn("");
-        when(propertiesReader.getApiUrl()).thenReturn("https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io");
+        when(propertiesReader.getApiUrl()).thenReturn(API_URL);
 
         List<String> testCityList = Arrays.stream(
                 "Cluj-Napoca,Bucuresti,Craiova,Timisoara,Dej,Cluj-Napoca,Baia-Mare,Arad,Bistrita,Oradea".split(
