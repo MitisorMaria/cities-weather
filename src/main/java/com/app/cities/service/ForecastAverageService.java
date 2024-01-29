@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 public class ForecastAverageService {
 
     @Autowired private PropertiesReader propertiesReader;
-
-    public static final String FORECAST_URL = "/forecast";
     public static final String DASH = "-";
     public static final String SLASH = "/";
     public static final String UNDERSCORE = "_";
@@ -90,7 +88,7 @@ public class ForecastAverageService {
      * @return a {@code Response} object containing the list of forecasts for the given city.
      */
     private Response doRequestForCity(String city) {
-        String uriString = propertiesReader.getApiUrl() + FORECAST_URL;
+        String uriString = propertiesReader.getApiUrl();
         final UriComponentsBuilder builder = UriComponentsBuilder.fromUri(URI.create(uriString));
         builder.path(SLASH + city);
         final URI uri = builder.build().toUri();

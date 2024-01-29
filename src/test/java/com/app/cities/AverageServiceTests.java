@@ -25,21 +25,21 @@ public class AverageServiceTests {
     @Test
     void areAveragesCalculatedCorrectly() {
         when(propertiesReader.getCsvPath()).thenReturn("");
-        when(propertiesReader.getApiUrl()).thenReturn("http://localhost:8082/forecastService");
+        when(propertiesReader.getApiUrl()).thenReturn("https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io");
 
         List<String> testCityList = Arrays.stream("Arad,Dej".split(",")).toList();
         List<ForecastAverage> forecastAverageList =
                 forecastAverageService.getForecastAverages(testCityList).toStream().collect(Collectors.toList());
         Assertions.assertEquals(1, forecastAverageList.size());
         Assertions.assertEquals("Arad", forecastAverageList.get(0).getName());
-        Assertions.assertEquals(19, forecastAverageList.get(0).getTemperature());
-        Assertions.assertEquals(16, forecastAverageList.get(0).getWind());
+        Assertions.assertEquals(15, forecastAverageList.get(0).getTemperature());
+        Assertions.assertEquals(39, forecastAverageList.get(0).getWind());
     }
 
     @Test
     void emptyResultWhenNoValidCities() {
         when(propertiesReader.getCsvPath()).thenReturn("");
-        when(propertiesReader.getApiUrl()).thenReturn("http://localhost:8082/forecastService");
+        when(propertiesReader.getApiUrl()).thenReturn("https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io");
 
         List<String> testCityList = Arrays.stream("Dej,Brasov".split(",")).toList();
         List<ForecastAverage> forecastAverageList =
@@ -50,7 +50,7 @@ public class AverageServiceTests {
     @Test
     void areValidCitiesDetectedCorrectly() {
         when(propertiesReader.getCsvPath()).thenReturn("");
-        when(propertiesReader.getApiUrl()).thenReturn("http://localhost:8082/forecastService");
+        when(propertiesReader.getApiUrl()).thenReturn("https://8a5b7f27-5ae0-4fe2-9f31-ed20df36afa4.mock.pstmn.io");
 
         List<String> testCityList = Arrays.stream(
                 "Cluj-Napoca,Bucuresti,Craiova,Timisoara,Dej,Cluj-Napoca,Baia-Mare,Arad,Bistrita,Oradea".split(

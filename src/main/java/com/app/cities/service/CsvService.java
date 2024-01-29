@@ -19,6 +19,8 @@ public class CsvService {
 
     public static final String HEADER = "Name, temperature, wind";
 
+    public static final String NO_DATA = "No data for city: ";
+
     /**
      * Writes the objects from the {@code Flux} to a .csv file.
      *
@@ -34,7 +36,9 @@ public class CsvService {
             // converted to an iterable in order to be able to use the writer
             averageFlux.toIterable().forEach(forecastAverage -> averageList.add(forecastAverage));
             for (ForecastAverage forecastAverage : averageList) {
-                writer.println(forecastAverage.toString());
+                if (!forecastAverage.getName().contains(NO_DATA)) {
+                    writer.println(forecastAverage);
+                }
             }
             writer.close();
         } catch (FileNotFoundException e) {
